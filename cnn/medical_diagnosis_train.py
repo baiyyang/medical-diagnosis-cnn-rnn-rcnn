@@ -17,6 +17,8 @@ import datetime
 import data_helpers
 import pickle
 from text_cnn import TextCNN
+from text_mf_cnn import MFTextCNN
+from text_afc_cnn import AFCTextCNN
 from tensorflow.contrib import learn
 
 
@@ -24,15 +26,17 @@ from tensorflow.contrib import learn
 # ==================================================
 
 # Data loading params
-tf.flags.DEFINE_float("dev_sample_percentage", .1, "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("train_data_file", "../data/train.txt",
+tf.flags.DEFINE_string("train_data_file", "./data_10/train.txt",
                        "Data source for the train data.")
-tf.flags.DEFINE_string("test_data_file", "../data/test.txt",
+tf.flags.DEFINE_string("test_data_file", "./data_10/test.txt",
                        "Data source for the test data.")
+
+# Choose the model
+tf.flags.DEFINE_string("model", "AFC-TextCNN", "Choose which the model")
 
 # Model Hyperparameters
 tf.flags.DEFINE_integer("embedding_dim", 128, "Dimensionality of character embedding (default: 128)")
-tf.flags.DEFINE_string("filter_sizes", "1,2,3,4,5,6,7,8", "Comma-separated filter sizes (default: '3,4,5')")
+tf.flags.DEFINE_string("filter_sizes", "2,3,4", "Comma-separated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularization lambda (default: 0.0)")
@@ -105,15 +109,39 @@ with tf.Graph().as_default():
     )
     sess = tf.Session(config=session_conf)
     with sess.as_default():
-        cnn = TextCNN(
-            sequence_length=x_train.shape[1],
-            num_classes=y_train.shape[1],
-            vocab_size=len(vocabulary),
-            embedding_size=FLAGS.embedding_dim,
-            filter_sizes=list(map(int, FLAGS.filter_sizes.split(','))),
-            num_filters=FLAGS.num_filters,
-            l2_reg_lambda=FLAGS.l2_reg_lambda
-        )
+        if FLAGS.model == "MF-TextCNN":
+            cnn = MFTextCNN(
+                sequence_length=x_train.shape[1],
+                num_classes=y_train.shape[1],
+                vocab_size=len(vocabulary),
+                embedding_size=FLAGS.embedding_dim,
+                filter_sizes=list(map(int, FLAGS.filter_sizes.split(','))),
+                num_filters=FLAGS.num_filters,
+                l2_reg_lambda=FLAGS.l2_reg_lambda
+            )
+            print("Use the MF-TextCNN model")
+        elif FLAGS.model == "AFC-TextCNN":
+            cnn = AFCTextCNN(
+                sequence_length=x_train.shape[1],
+                num_classes=y_train.shape[1],
+                vocab_size=len(vocabulary),
+                embedding_size=FLAGS.embedding_dim,
+                filter_sizes=list(map(int, FLAGS.filter_sizes.split(','))),
+                num_filters=FLAGS.num_filters,
+                l2_reg_lambda=FLAGS.l2_reg_lambda
+            )
+            print("Use the AFC-TextCNN model")
+        else:
+            cnn = TextCNN(
+                sequence_length=x_train.shape[1],
+                num_classes=y_train.shape[1],
+                vocab_size=len(vocabulary),
+                embedding_size=FLAGS.embedding_dim,
+                filter_sizes=list(map(int, FLAGS.filter_sizes.split(','))),
+                num_filters=FLAGS.num_filters,
+                l2_reg_lambda=FLAGS.l2_reg_lambda
+            )
+            print("Use the TextCNN model")
 
         # define training procedure
         # 在这里，train_op在这里是一个新创建的操作，我们可以运行它来对参数执行梯度更新。
