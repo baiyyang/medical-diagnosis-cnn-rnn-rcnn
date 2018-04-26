@@ -23,3 +23,10 @@
 - jieba
 
 ## Result
+|models|presicion|note|
+|:----:|:--------:|:----:|
+|rnn|0.78|收敛较慢|
+|textcnn|0.82|收敛较快，容易过拟合|
+|MF-textcnn|0.80|收敛较慢，欠拟合|
+|AFC-textcnn|0.88|收敛速度一般，准确率较高|
+|rcnn|0.84|收敛较快|
