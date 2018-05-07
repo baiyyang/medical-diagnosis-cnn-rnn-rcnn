@@ -13,7 +13,7 @@
   ![](https://github.com/baiyyang/medical-diagnosis-cnn-rnn-rcnn/blob/master/images/mp-textcnn.jpg)
   - 基于全特征相连层下的卷积神经网络文本分类模型(All Features Concat Convolutional Nerual Network for Sentence Classification，AFC-TextCNN)
   ![](https://github.com/baiyyang/medical-diagnosis-cnn-rnn-rcnn/blob/master/images/afc-textcnn.jpg)
-3. rcnn为Bi-LSTM后接高度为1，宽度为2*embedding的卷积核，之后取max-pooling，最后经过softmax函数。模型的结构如图所示。
+3. rcnn为Bi-LSTM后接高度为1，宽度为2*hidden_dim的卷积核，之后取max-pooling，最后经过softmax函数。模型的结构如图所示。
 ![](https://github.com/baiyyang/medical-diagnosis-cnn-rnn-rcnn/blob/master/images/rcnn.png)
 ## Requirements
 - python 3
