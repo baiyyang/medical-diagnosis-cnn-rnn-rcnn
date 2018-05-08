@@ -239,7 +239,11 @@ with tf.Graph().as_default():
 
         # Generate batch
         batches = data_helpers.batch_iter(list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
-
+        
+	# Statistic the number of parameters
+	print("the number of parameters is: {}".format(np.sum([np.prod(v.get_shape().as_list())
+                                                               for v in tf.trainable_variables()])))
+ 
         # Training loop. for each batch
         for batch in batches:
             x_batch, y_batch = zip(*batch)

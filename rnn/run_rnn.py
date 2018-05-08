@@ -120,7 +120,11 @@ def train(rnn):
 
     total_batch = 0  # 总批次
     best_acc_test = 0.0  # 最佳准确率
-
+    
+    # Statistic the number of parameters
+    print("the number of parameters is: {}".format(np.sum([np.prod(v.get_shape().as_list())
+                                                           for v in tf.trainable_variables()])))
+ 
     for epoch in range(rnn.num_epoches):
         print('Epoch: {}'.format(epoch + 1))
         batch_train = batch_iter(x_train, y_train, batch_size=rnn.batch_size)
